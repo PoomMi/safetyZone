@@ -1,12 +1,12 @@
 <template>
-    <mymap/>
+  <mymap />
 </template>
 
 <script>
-import mymap from '@/components/mymap'
+import mymap from "@/components/mymap";
 export default {
-    layout: 'nav-bar',
-    
-    components: { mymap }
-}
+  layout: "nav-bar",
+
+  components: { mymap },
+};
 </script>

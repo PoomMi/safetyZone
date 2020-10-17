@@ -28,7 +28,6 @@
 			return{
 				current_lat: '',
 				current_lon: '',
-                dustData: '',
 			}
 		},
 
@@ -100,18 +99,22 @@
 
                     //set popup
                     school_pin.bindPopup(
-                        "<b>"+type+"</b>"
-                        +"<br><b>Name:</b> "+name
+                        `
+                            <b>${type}</b><br>
+                            <b>Name:</b> ${name}<br><br>
+                            <a href='safety-zone/sf_01'>
+                                <button type='button' class='btn btn-primary'>Info</button>
+                            </a>
+                            <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
+                                <button type='button' class='btn btn-success'>Navigatation</button>
+                            </a>
+                        `
                     );
                     
                     //set mouse hover action
                     school_pin.on('mouseover', function (e) {
                         school_pin.openPopup();
                     });
-                    school_pin.on('mouseout', function (e) {
-                        school_pin.closePopup();
-                    });
-
                 })
             })
         },
@@ -141,16 +144,21 @@
 
                     //set popup
                     private_pin.bindPopup(
-                        "<b>"+type+"</b>"
-                        +"<br><b>Name:</b> "+name
+                        `
+                            <b>${type}</b><br>
+                            <b>Name:</b> ${name}<br><br>
+                            <a href='safety-zone/sf_01'>
+                                <button type='button' class='btn btn-primary'>Info</button>
+                            </a>
+                            <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
+                                <button type='button' class='btn btn-success'>Navigatation</button>
+                            </a>
+                        `
                     );
                     
                     //set mouse hover action
                     private_pin.on('mouseover', function (e) {
                         private_pin.openPopup();
-                    });
-                    private_pin.on('mouseout', function (e) {
-                        private_pin.closePopup();
                     });
                 })
             })
@@ -181,16 +189,21 @@
 
                     //set popup
                     hospital_pin.bindPopup(
-                        "<b>"+type+"</b>"
-                        +"<br><b>Name:</b> "+name
+                        `
+                            <b>${type}</b><br>
+                            <b>Name:</b> ${name}<br><br>
+                            <a href='safety-zone/sf_01'>
+                                <button type='button' class='btn btn-primary'>Info</button>
+                            </a>
+                            <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
+                                <button type='button' class='btn btn-success'>Navigatation</button>
+                            </a>
+                        `
                     );
                     
                     //set mouse hover action
                     hospital_pin.on('mouseover', function (e) {
                         hospital_pin.openPopup();
-                    });
-                    hospital_pin.on('mouseout', function (e) {
-                        hospital_pin.closePopup();
                     });
                 })
             })
@@ -208,10 +221,11 @@
             axios.get('https://safety-zone-c1ae5.firebaseio.com/safetyZone/userAdded.json')
             .then( res=>{
                 res.data.forEach(el=> {
+                    console.log(el)
                     let point
                     lat = el.lat
                     lon = el.lon
-                    name = el.sf_name
+                    name = el.name
                     type = el.type
 
                     if(type==='School'){
@@ -236,16 +250,21 @@
 
                     //set popup
                     pin.bindPopup(
-                        "<b>"+type+"</b>"
-                        +"<br><b>Name:</b> "+name
+                        `
+                            <b>${type}</b><br>
+                            <b>Name:</b> ${name}<br><br>
+                            <a href='safety-zone/sf_01'>
+                                <button type='button' class='btn btn-primary'>Info</button>
+                            </a>
+                            <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
+                                <button type='button' class='btn btn-success'>Navigatation</button>
+                            </a>
+                        `
                     );
                     
                     //set mouse hover action
                     pin.on('mouseover', function (e) {
                         pin.openPopup();
-                    });
-                    pin.on('mouseout', function (e) {
-                        pin.closePopup();
                     });
                 })
             })
@@ -258,6 +277,7 @@
             // get location
             axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCzLAmL9pLpThOZ4HzoU2JfY7hAmPbukYI')
                 .then(async res=> {
+                    console.log(res.data)
                     this.current_lat =  res.data.location.lat;
                     this.current_lon =  res.data.location.lng;
 
@@ -287,7 +307,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	#map{
 		position: relative;
 	    top: 2.5vh;

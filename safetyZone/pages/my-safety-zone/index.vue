@@ -55,7 +55,7 @@ export default {
               class="nav-link nav-item map nuxt-link-active">
                 <div class="row ml-1 mt-2">
                   <div class="col-4 sf_content">${el.sf_id}</div>
-                  <div class="col">${el.sf_name}</div>
+                  <div class="col">${el.name}</div>
                 </div>
                 <hr>
               </a>

@@ -1,26 +1,176 @@
 <template>
-    <div v-if="load">
-      my sf detail
+  <b-container fluid="md" class="py-5">
+    <b-overlay :show="overlay" no-wrap> </b-overlay>
+    <div id="content" v-if="data_exist">
+      <div v-if="load">
+        <div class="btn">
+          <b-button variant="danger" class="ml-2" @click="deleteClicked"
+            >Delete</b-button
+          >
+          <b-button variant="primary" @click="editClicked">Edite</b-button>
+        </div>
+
+        <mySF :data="data" />
+      </div>
+
+      <mySF_edit
+        v-if="edit"
+        :data="data"
+        @edited="editAction"
+        @editLoadFinished="editLoadFinished"
+        @cancel="editCancel"
+      />
     </div>
+    <div v-if="!data_exist" class="no-data">
+      No data
+      <nuxt-link class="nav-link nav-item btn-back" to="/">
+        <b-button block variant="primary">Back</b-button>
+      </nuxt-link>
+    </div>
+  </b-container>
 </template>
 
 <script>
-export default {
-  layout: 'nav-bar',
+import axios from "axios";
+import mySF from "@/components/my-sf";
+import mySF_edit from "@/components/my-sf-edit";
 
-  mounted(){
-		if( this.$cookies.get('uid')==null ){
-			alert('Invalid access!, try to login.')
-		  window.location = "/"
-		}else{
-			this.load = true 
-		}
+export default {
+  layout: "nav-bar",
+
+  components: { mySF, mySF_edit },
+
+  data() {
+    return {
+      overlay: true,
+      load: false,
+      data_exist: true,
+      data: "",
+      edit: false,
+      sf_id: "",
+      index_onUserAdded: "",
+      index_onSFOwner: "",
+      user_id: "",
+    };
   },
-  
-  data(){
-    return{
-      load: false
+  mounted() {
+    if (this.$cookies.get("uid") == null) {
+      alert("Invalid access!, try to login.");
+      window.location = "/";
+    } else {
+      this.load = true;
     }
-  }
-}
+  },
+  created() {
+    this.user_id = this.$cookies.get("uid");
+    this.sf_id = this.$route.params.id;
+    this.$fireDb
+      .ref(`safetyZone/sf_user_info/${this.sf_id}`)
+      .once("value")
+      .then(async (res) => {
+        if (res.val() == null) this.data_exist = false;
+        else {
+          this.data = await res.val();
+          this.data_exist = true;
+          this.data.sf_id = this.sf_id;
+        }
+      })
+      .then(() => {
+        this.load = true;
+        this.overlay = false;
+      })
+      .catch((err) => console.error(err));
+  },
+
+  methods: {
+    editClicked() {
+      this.load = false;
+      this.edit = true;
+      this.overlay = true;
+    },
+    async deleteClicked() {
+      let amount;
+      this.$bvModal
+        .msgBoxConfirm(`Are you sure to remove  ${this.data.name}`, {
+          title: "Please Confirm",
+          okVariant: "danger",
+          okTitle: "confirm",
+          cancelTitle: "cancel",
+        })
+        .then(async (value) => {
+          if (value) {
+            let u_id = this.$cookies.get("uid");
+
+            const data_sf = this.$fireDb.ref(
+              `safetyZone/sf_user_info/${this.sf_id}`
+            );
+
+            const data_userAdded = this.$fireDb.ref(
+              `safetyZone/userAdded/${this.data.index_onUserAdded}`
+            );
+
+            const data_owner = this.$fireDb.ref(
+              `sf_owner/${u_id}/${this.data.index_onSFOwner}`
+            );
+
+            const amountOnDB = this.$fireDb.ref("safetyZone/amount");
+
+            await amountOnDB
+              .once("value")
+              .then((data) => {
+                //set safety zone id
+                amount = data.val();
+                amount = amount - 1;
+              })
+              .catch((err) => console.error(err));
+
+            await data_sf
+              .remove()
+              .then(() => {
+                console.log("sf_info is removed");
+              })
+              .catch((err) => console.error(err));
+
+            await data_userAdded
+              .remove()
+              .then(() => {
+                console.log("sf_info is removed");
+              })
+              .catch((err) => console.error(err));
+
+            await data_owner
+              .remove()
+              .then(() => {
+                console.log("sf_info is removed");
+              })
+              .catch((err) => console.error(err));
+
+            await amountOnDB.set(amount); //update amount
+
+            window.location = "/my-safety-zone";
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    editLoadFinished() {
+      this.overlay = false;
+    },
+    editAction() {
+      this.edit = false;
+      this.load = true;
+    },
+    editCancel(){
+      this.edit = false;
+      this.load = true;
+    }
+  },
+};
 </script>
+
+<style scoped>
+.btn {
+  float: right;
+}
+</style>
