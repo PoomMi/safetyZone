@@ -5,24 +5,6 @@
 <script>
 	import axios from "axios";
 
-	export default{
-		  head: {
-		    script: [
-		      {
-		        src: 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js',
-		        integrity: 'sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==',
-		        crossorigin: ""
-		      }
-		    ],
-		    link: [
-		      {
-		        rel: 'stylesheet',
-		        href: 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css',
-		        integrity: "sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==",
-		        crossorigin: ""
-		      }
-		    ]
-		},
 
 		data(){
 			return{
@@ -42,10 +24,8 @@
                 let time = data.log_datetime; //get time
                 let sensor; //var to set sensor color
 
-                    if(aqi_pm25<=50) sensor = 'https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fgreen-point.png?alt=media&token=58bc70c6-de74-45a5-b406-8f0c33e80073';
-                    else if(aqi_pm25<=100) sensor = 'https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fyellow-point.png?alt=media&token=47609d47-ce10-455b-a2d1-5e4b46a1d0ba';
-                    else if(aqi_pm25<=150) sensor = 'https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Forange-point.png?alt=media&token=446a1a4a-25a9-466c-bc0c-9ffec61b8083';
-                    else sensor = 'https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fred-point.png?alt=media&token=f8d62174-e75d-4974-ba6d-da3caf63db9d';
+  created() {
+    let map;
 
                     //set sensor on the map
                     let point = L.icon({
