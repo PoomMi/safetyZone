@@ -99,6 +99,8 @@ export default {
         })
         .then(async (value) => {
           if (value) {
+            this.overlay = true;
+            
             let u_id = this.$cookies.get("uid");
 
             const data_sf = this.$fireDb.ref(
@@ -124,28 +126,16 @@ export default {
               })
               .catch((err) => console.error(err));
 
-            await data_sf
-              .remove()
-              .then(() => {
-                console.log("sf_info is removed");
-              })
-              .catch((err) => console.error(err));
+            await data_sf.remove().catch((err) => console.error(err));
 
-            await data_userAdded
-              .remove()
-              .then(() => {
-                console.log("sf_info is removed");
-              })
-              .catch((err) => console.error(err));
+            await data_userAdded.remove().catch((err) => console.error(err));
 
-            await data_owner
-              .remove()
-              .then(() => {
-                console.log("sf_info is removed");
-              })
-              .catch((err) => console.error(err));
+            await data_owner.remove().catch((err) => console.error(err));
 
             await amountOnDB.set(amount); //update amount
+
+            this.overlay = false;
+            alert(this.data.name + " is removed");
 
             window.location = "/my-safety-zone";
           }
@@ -161,10 +151,10 @@ export default {
       this.edit = false;
       this.load = true;
     },
-    editCancel(){
+    editCancel() {
       this.edit = false;
       this.load = true;
-    }
+    },
   },
 };
 </script>

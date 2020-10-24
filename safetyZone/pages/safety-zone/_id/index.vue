@@ -2,7 +2,6 @@
   <b-container fluid="md" class="py-5">
     <b-overlay :show="!load" no-wrap> </b-overlay>
     <div id="content" v-if="data_exist">
-      <spaceBox class="space-box" />
       <div id="name"><b>Name</b>: {{ data.name }}</div>
       <div id="type"><b>Type</b>: {{ data.type }}</div>
       <div id="owner"><b>Owner</b>: {{ data.owner }}</div>
@@ -31,12 +30,9 @@
 
 <script>
 import axios from "axios";
-import spaceBox from "@/components/sf-available";
 
 export default {
   layout: "nav-bar",
-
-  components: { spaceBox },
 
   data() {
     return {

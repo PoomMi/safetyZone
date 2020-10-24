@@ -1,9 +1,9 @@
 
 export default {
-  server: {     
+  server: {
     port: 3000, // default: 3000     
     host: '0.0.0.0' // default: localhost   
-  }, 
+  },
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode
@@ -39,6 +39,7 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    { src: '~/plugins/vue-leaflet', ssr: false },
   ],
   /*
   ** Auto import components
@@ -54,9 +55,9 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    [ 'bootstrap-vue/nuxt', { icons: true } ], // Doc: https://bootstrap-vue.js.org
-    [ 'cookie-universal-nuxt'], //cookie 
-    [ '@nuxtjs/firebase', //firebase service
+    ['bootstrap-vue/nuxt', { icons: true }], // Doc: https://bootstrap-vue.js.org
+    ['cookie-universal-nuxt'], //cookie 
+    ['@nuxtjs/firebase', //firebase service
       {
         config: {
           apiKey: "AIzaSyD9b-CAfy2cfYlFs1Pvzm4vS5U7leRHRKs",

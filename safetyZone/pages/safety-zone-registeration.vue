@@ -1,5 +1,6 @@
 <template>
   <b-container fluid="md" class="py-5" v-if="load">
+    <b-overlay :show="loading" no-wrap class="loading"> </b-overlay>
     <b-row class="mb-4">
       <b-col v-for="n in 3" :key="n" :cols="cols[n]"></b-col>
       <b-col>
@@ -441,12 +442,14 @@ export default {
       window.location = "/";
     } else {
       this.load = true;
+      this.loading = false;
     }
   },
 
   data() {
     return {
       load: false,
+      loading: true,
       form: {
         name: "",
         owner: "",
@@ -520,6 +523,7 @@ export default {
           index_onUserAdded: this.form.index_onUserAdded,
         })
         .then(() => {
+          this.loading = false;
           alert("data is inserted!");
         })
         .catch((err) => {
@@ -545,6 +549,7 @@ export default {
           type: this.form.type,
           lat: this.form.lat_lng.lat,
           lon: this.form.lat_lng.lng,
+          owner: this.$cookies.get("uid")
         })
         .catch((err) => {
           console.error(err);
@@ -574,6 +579,7 @@ export default {
 
     onSubmit(evt) {
       evt.preventDefault();
+      this.loading = true;
       let sf_id = "sf_0";
       let amount;
 
@@ -759,5 +765,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+.loading{
+  position: fixed !important;
 }
 </style>
