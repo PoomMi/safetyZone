@@ -78,6 +78,8 @@ export default {
           for (let index in res.val()) {
             if (res.val()[index] != null) this.data.push(res.val()[index]);
           }
+        }else{
+          alert("data is empty")
         }
       })
       .then(() => {

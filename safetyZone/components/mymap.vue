@@ -1,5 +1,6 @@
 <template>
   <div>
+    <b-overlay :show="data_loading" no-wrap> </b-overlay>
     <div id="map"></div>
   </div>
 </template>
@@ -17,6 +18,7 @@ export default {
   },
   data() {
     return {
+      data_loading: true,
       school_pin:
         "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2FsafetyZone%2Fschool_pin.png?alt=media&token=9a00b9e5-c699-4a2a-8c42-b249626c81b8",
       private_pin:
@@ -235,17 +237,34 @@ export default {
 
     async getLocation() {
       return new Promise(async (resolve, reject) => {
-        var location = [];
+        var result = {
+          location: [],
+          zoom: 5
+        };
         try {
           if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async function (position) {
-              await location.push(position.coords.latitude);
-              await location.push(position.coords.longitude);
+            navigator.geolocation.getCurrentPosition(
+              async function (position) {
+                await result.location.push(position.coords.latitude);
+                await result.location.push(position.coords.longitude);
+                result.zoom = 12;
 
-              resolve(location);
-            });
+                resolve(result);
+              },
+              async function () {
+                alert("Website cannot indicate your loaction")
+                await result.location.push(13.7244416);
+                await result.location.push(100.3529157);
+
+                resolve(result);
+              }
+            );
           } else {
-            reject(new Error("Geolocation is not supported by this browser."));
+            alert("Geolocation is not supported by this browser \n Website cannot indicate your loaction");
+            result.location.push(12.9036402);
+            result.location.push(92.4362261);
+
+            resolve(result);
           }
         } catch (err) {
           reject(new Error(err));
@@ -256,11 +275,11 @@ export default {
   mounted() {
     let map;
     this.getLocation() //get locastion
-      .then(async (location) => {
+      .then(async (res) => {
         //set map view
-        map = await L.map("map").setView(location, 12); //set map
+        map = await L.map("map").setView(res.location, res.zoom); //set map
         //get map
-        await L.marker(location).addTo(map);
+        await L.marker(res.location).addTo(map);
         await L.tileLayer(
           "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
           {
@@ -328,6 +347,9 @@ export default {
               this.hospital_pin
             );
           });
+      })
+      .then(()=>{
+        this.data_loading = false;
       })
       .catch((err) => {
         console.error(err);

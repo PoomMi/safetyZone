@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       load: false,
-      type: "Hospital",
+      type: "",
       data: [],
       data_loading: true,
     };
@@ -73,26 +73,52 @@ export default {
       this.load = true;
     }
 
-    this.$fireDb
-      .ref("safetyZone/userAdded")
-      .orderByChild("type")
-      .equalTo(this.type)
-      .once("value")
+    this.initial()
       .then((res) => {
-        if (res.val() != null) {
-          for (let index in res.val()) {
-            if (res.val()[index] != null) this.data.push(res.val()[index]);
-          }
-        }
+        this.type = res;
       })
       .then(() => {
-        this.data_loading = false;
+        this.getData();
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => console.error(err));
   },
   methods: {
+    initial() {
+      return new Promise((resolve, reject) => {
+        try {
+          this.$fireDb
+            .ref(`admin/${this.$cookies.get("uid")}/type`)
+            .once("value")
+            .then((res) => {
+              resolve(res.val());
+            });
+        } catch (err) {
+          reject(new Error(err));
+        }
+      });
+    },
+    getData() {
+      this.$fireDb
+        .ref("safetyZone/userAdded")
+        .orderByChild("type")
+        .equalTo(this.type)
+        .once("value")
+        .then((res) => {
+          if (res.val() != null) {
+            for (let index in res.val()) {
+              if (res.val()[index] != null) this.data.push(res.val()[index]);
+            }
+          }else{
+            alert("data is empty")
+          }
+        })
+        .then(() => {
+          this.data_loading = false;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     async sf_remove(sf_id, sf_name) {
       let amount;
       let owner_id;
