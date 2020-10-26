@@ -19,6 +19,7 @@
     "firebase": "^7.19.1",
     "leaflet": "^1.7.1",
     "nuxt": "^2.14.0",
+    "qrcode.vue": "^1.7.0",
     "vue2-leaflet": "^2.6.0"
   },
   "devDependencies": {}

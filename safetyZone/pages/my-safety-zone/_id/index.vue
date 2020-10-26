@@ -7,7 +7,16 @@
           <b-button variant="danger" class="ml-2" @click="deleteClicked"
             >Delete</b-button
           >
-          <b-button variant="primary" @click="editClicked">Edite</b-button>
+          <b-button variant="primary" @click="editClicked">Edite</b-button
+          ><br />
+          <b-button
+            variant="info"
+            @click="qr_code = !qr_code"
+            class="mt-2 btn-qr"
+            v-b-tooltip.hover
+            title="Get QR code for rating"
+            >Get QR code</b-button
+          >
         </div>
 
         <mySF :data="data" />
@@ -27,6 +36,20 @@
         <b-button block variant="primary">Back</b-button>
       </nuxt-link>
     </div>
+
+    <b-modal v-model="qr_code" hide-footer title="Safety Zone QR Code">
+      <div>Print this QR code to allow customer rate this safety zone.</div>
+      <center>
+        <qrcode-vue
+          :value="`http://localhost:3000/rating/${sf_id}`"
+          level="H"
+          size="300"
+          class="qr-code"
+        ></qrcode-vue>
+      </center>
+
+      <div id="aaa"></div>
+    </b-modal>
   </b-container>
 </template>
 
@@ -34,11 +57,12 @@
 import axios from "axios";
 import mySF from "@/components/my-sf";
 import mySF_edit from "@/components/my-sf-edit";
+import QrcodeVue from "qrcode.vue";
 
 export default {
   layout: "nav-bar",
 
-  components: { mySF, mySF_edit },
+  components: { mySF, mySF_edit, QrcodeVue },
 
   data() {
     return {
@@ -51,6 +75,7 @@ export default {
       index_onUserAdded: "",
       index_onSFOwner: "",
       user_id: "",
+      qr_code: false,
     };
   },
   mounted() {
@@ -100,7 +125,7 @@ export default {
         .then(async (value) => {
           if (value) {
             this.overlay = true;
-            
+
             let u_id = this.$cookies.get("uid");
 
             const data_sf = this.$fireDb.ref(
@@ -162,5 +187,14 @@ export default {
 <style scoped>
 .btn {
   float: right;
+}
+.btn-qr {
+  width: 100%;
+}
+.qr-code {
+  margin-top: 5%;
+}
+canvas {
+  width: 70%;
 }
 </style>
