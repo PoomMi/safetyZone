@@ -189,14 +189,28 @@
         <!-- capacity -->
         <b-form-group
           id="input-group-capacity"
-          label="Capacity:"
+          label="Capacity of room:"
           label-for="input-capacity"
         >
           <b-form-input
             id="input-capacity"
-            v-model="form.capacity"
+            v-model="form.capacity.width"
             required
-            placeholder="Enter capacity"
+            placeholder="Enter width (m)"
+            type="number"
+          ></b-form-input>
+          <b-form-input
+            id="input-capacity"
+            v-model="form.capacity.len"
+            required
+            placeholder="Enter length (m)"
+            type="number"
+          ></b-form-input>
+          <b-form-input
+            id="input-capacity"
+            v-model="form.capacity.height"
+            required
+            placeholder="Enter height (m)"
             type="number"
           ></b-form-input>
         </b-form-group>
@@ -286,7 +300,7 @@
             <template v-slot:header>
               <h6 class="mb-0" align="left">Cover Image</h6>
             </template>
-            <b-card-text>Choose image to show on the map.</b-card-text>
+            <b-card-text>Choose image to show the front of place.</b-card-text>
             <b-row>
               <b-col lg="10">
                 <b-form-file
@@ -318,7 +332,7 @@
               <h6 class="mb-0" align="left">Inside Images</h6>
             </template>
             <b-card-text
-              >Choose images to give user more infomation.</b-card-text
+              >Choose images to give more infomation.</b-card-text
             >
             <b-row>
               <!-- img1 -->
@@ -421,9 +435,10 @@
             </div>
           </b-card>
         </div>
-
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <div class="btn-container">
+          <b-button type="reset" variant="danger">Reset</b-button>
+          <b-button type="submit" variant="primary">Submit</b-button>
+        </div>
       </b-form>
     </div>
   </b-container>
@@ -470,7 +485,11 @@ export default {
         air_purifier: "",
         overnight: false,
         room: "",
-        capacity: "",
+        capacity: {
+          width: "",
+          len: "",
+          height: "",
+        },
         type: "",
         cover_img_url: "",
         inside_img1_url: "",
@@ -514,7 +533,9 @@ export default {
           overnight: this.form.overnight,
           room: this.form.room,
           type: this.form.type,
-          capacity: this.form.capacity,
+          capacity_width: this.form.capacity.width,
+          capacity_len: this.form.capacity.len,
+          capacity_height: this.form.capacity.height,
           cover_url: this.form.cover_img_url,
           inside1_url: this.form.inside_img1_url,
           inside2_url: this.form.inside_img2_url,
@@ -549,7 +570,7 @@ export default {
           type: this.form.type,
           lat: this.form.lat_lng.lat,
           lon: this.form.lat_lng.lng,
-          owner: this.$cookies.get("uid")
+          owner: this.$cookies.get("uid"),
         })
         .catch((err) => {
           console.error(err);
@@ -603,7 +624,6 @@ export default {
     },
 
     onReset(evt) {
-      console.log(evt);
       evt.preventDefault();
       // Reset our form values
       this.form.name = "";
@@ -620,7 +640,9 @@ export default {
       this.form.air_purifier = "";
       this.form.overnight = "";
       this.form.room = "";
-      this.form.capacity = "";
+      this.form.capacity.width = "";
+      this.form.capacity.len = "";
+      this.form.capacity.height = "";
       this.form.type = "";
       this.form.cover_img_url = "";
       this.form.inside_img1_url = "";
@@ -644,15 +666,39 @@ export default {
       });
     },
 
+    async getLocation() {
+      return new Promise(async (resolve, reject) => {
+        var location = {
+          lat: "",
+          lng: "",
+        };
+        try {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                location.lat = position.coords.latitude;
+                location.lng = position.coords.longitude;
+
+                resolve(location);
+              },
+              function () {
+                alert("browser cannot indicate your location.")
+              }
+            );
+          } else {
+            alert("browser cannot indicate your location.")
+          }
+        } catch (err) {
+          reject(new Error(err));
+        }
+      });
+    },
+
     myPoint() {
-      axios
-        .post(
-          "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCzLAmL9pLpThOZ4HzoU2JfY7hAmPbukYI"
-        )
-        .then((res) => {
-          this.form.lat_lng.lat = res.data.location.lat;
-          this.form.lat_lng.lng = res.data.location.lng;
-        });
+      this.getLocation().then((res) => {
+        this.form.lat_lng.lat = res.lat;
+        this.form.lat_lng.lng = res.lng;
+      });
     },
 
     async previewImg(event, img) {
@@ -766,7 +812,10 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-.loading{
+.loading {
   position: fixed !important;
+}
+.btn-container {
+  float: right;
 }
 </style>

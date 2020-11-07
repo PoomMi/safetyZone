@@ -163,14 +163,28 @@
       <!-- capacity -->
       <b-form-group
         id="input-group-capacity"
-        label="Capacity:"
+        label="Capacity of room:"
         label-for="input-capacity"
       >
         <b-form-input
           id="input-capacity"
-          v-model="form.capacity"
+          v-model="form.capacity_width"
           required
-          placeholder="Enter capacity"
+          placeholder="Enter width (m)"
+          type="number"
+        ></b-form-input>
+        <b-form-input
+          id="input-capacity"
+          v-model="form.capacity_len"
+          required
+          placeholder="Enter length (m)"
+          type="number"
+        ></b-form-input>
+        <b-form-input
+          id="input-capacity"
+          v-model="form.capacity_height"
+          required
+          placeholder="Enter height (m)"
           type="number"
         ></b-form-input>
       </b-form-group>
@@ -264,7 +278,7 @@
           <template v-slot:header>
             <h6 class="mb-0" align="left">Cover Image</h6>
           </template>
-          <b-card-text>Choose image to show on the map.</b-card-text>
+          <b-card-text>Choose image to show the front of place.</b-card-text>
           <b-row>
             <b-col lg="10">
               <b-form-file
@@ -300,7 +314,7 @@
           <template v-slot:header>
             <h6 class="mb-0" align="left">Inside Images</h6>
           </template>
-          <b-card-text>Choose images to give user more infomation.</b-card-text>
+          <b-card-text>Choose images to give more infomation.</b-card-text>
           <b-row>
             <!-- img1 -->
             <b-col lg="10">
@@ -403,10 +417,8 @@
         </b-card>
       </div>
 
-       <b-button type="submit" variant="primary" >Update</b-button>
-       <b-button variant="danger" @click="$emit('cancel')">Cancel</b-button>
-
-      
+      <b-button type="submit" variant="primary">Update</b-button>
+      <b-button variant="danger" @click="$emit('cancel')">Cancel</b-button>
     </b-form>
   </b-container>
 </template>
@@ -454,7 +466,9 @@ export default {
         air_pur: "",
         overnight: false,
         room: "",
-        capacity: "",
+        capacity_width: "",
+        capacity_len: "",
+        capacity_height: "",
         type: "",
         cover_url: "",
         inside1_url: "",
@@ -497,7 +511,9 @@ export default {
           overnight: this.form.overnight,
           room: this.form.room,
           type: this.form.type,
-          capacity: this.form.capacity,
+          capacity_width: this.form.capacity.width,
+          capacity_len: this.form.capacity.len,
+          capacity_height: this.form.capacity.height,
           cover_url: this.form.cover_url,
           inside1_url: this.form.inside1_url,
           inside2_url: this.form.inside2_url,

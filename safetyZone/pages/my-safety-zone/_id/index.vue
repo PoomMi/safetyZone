@@ -3,20 +3,22 @@
     <b-overlay :show="overlay" no-wrap> </b-overlay>
     <div id="content" v-if="data_exist">
       <div v-if="load">
-        <div class="btn">
-          <b-button variant="danger" class="ml-2" @click="deleteClicked"
-            >Delete</b-button
-          >
-          <b-button variant="primary" @click="editClicked">Edite</b-button
-          ><br />
-          <b-button
-            variant="info"
-            @click="qr_code = !qr_code"
-            class="mt-2 btn-qr"
-            v-b-tooltip.hover
-            title="Get QR code for rating"
-            >Get QR code</b-button
-          >
+        <div class="btn-container">
+          <div class="btn">
+            <b-button variant="danger" class="ml-2" @click="deleteClicked"
+              >Delete</b-button
+            >
+            <b-button variant="primary" @click="editClicked">Edite</b-button
+            ><br />
+            <b-button
+              variant="info"
+              @click="qr_code = !qr_code"
+              class="mt-2 btn-qr"
+              v-b-tooltip.hover
+              title="Get QR code for rating"
+              >Get QR code</b-button
+            >
+          </div>
         </div>
 
         <mySF :data="data" />
@@ -47,8 +49,6 @@
           class="qr-code"
         ></qrcode-vue>
       </center>
-
-      <div id="aaa"></div>
     </b-modal>
   </b-container>
 </template>
@@ -185,7 +185,7 @@ export default {
 </script>
 
 <style scoped>
-.btn {
+.btn-container {
   float: right;
 }
 .btn-qr {
@@ -196,5 +196,13 @@ export default {
 }
 canvas {
   width: 70%;
+}
+@media only screen and (max-width: 1000px) {
+  .btn-container {
+    width: 100%;
+    float: none;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>

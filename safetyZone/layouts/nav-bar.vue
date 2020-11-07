@@ -45,7 +45,7 @@
       </b-collapse>
     </b-navbar>
 
-    <nuxt />
+    <Nuxt />
   </div>
 </template>
 
@@ -61,10 +61,15 @@ export default {
 
   created() {
     if (this.$cookies.get("uid") != null) {
-	  this.auth = true;
-	  this.isAdmin();
+      this.auth = true;
     }
     this.load = true;
+  },
+
+  mounted() {
+    if (this.auth) {
+      this.isAdmin();
+    }
   },
 
   methods: {
@@ -114,13 +119,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .brand {
   color: white !important;
   font-weight: bold;
 }
 .nav {
   background-color: #81d4fa;
+  z-index: 30;
 }
 .navbar-light .navbar-nav .nav-link {
   color: white;

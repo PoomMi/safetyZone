@@ -29,52 +29,54 @@ export default {
   },
   methods: {
     dust_mark(data, map) {
-      data.forEach((el) => {
-        let lat = el.lat;
-        let lon = el.lon;
-        let name = el.name_th; //get point name
-        let pm25 = el.pm25; //get pm2.5 volume
-        let aqi_pm25 = el.pm25_aqi; //get pm2.5 aqi
-        let time = el.log_datetime; //get time
-        let sensor; //var to set sensor color
-        if (aqi_pm25 <= 50)
-          sensor =
-            "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fgreen-point.png?alt=media&token=58bc70c6-de74-45a5-b406-8f0c33e80073";
-        else if (aqi_pm25 <= 100)
-          sensor =
-            "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fyellow-point.png?alt=media&token=47609d47-ce10-455b-a2d1-5e4b46a1d0ba";
-        else if (aqi_pm25 <= 150)
-          sensor =
-            "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Forange-point.png?alt=media&token=446a1a4a-25a9-466c-bc0c-9ffec61b8083";
-        else
-          sensor =
-            "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fred-point.png?alt=media&token=f8d62174-e75d-4974-ba6d-da3caf63db9d";
-        //set sensor on the map
-        let point = L.icon({
-          iconUrl: sensor, //icon url
-          iconSize: [12, 12], // size of the icon
-        });
-        //drop sensor on the map
-        let dustBoy = L.marker([lat, lon], { icon: point }).addTo(map);
-        //set popup
-        dustBoy.bindPopup(
-          "<b>DustBoy Sensor</b>" +
-            "<br><b>Name:</b> " +
-            name +
-            "<br><b>PM2.5:</b> " +
-            pm25 +
-            "<br><b>PM2.5 AQI:</b> " +
-            aqi_pm25
-        );
+      if (data != null) {
+        data.forEach((el) => {
+          let lat = el.lat;
+          let lon = el.lon;
+          let name = el.name_th; //get point name
+          let pm25 = el.pm25; //get pm2.5 volume
+          let aqi_pm25 = el.pm25_aqi; //get pm2.5 aqi
+          let time = el.log_datetime; //get time
+          let sensor; //var to set sensor color
+          if (aqi_pm25 <= 50)
+            sensor =
+              "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fgreen-point.png?alt=media&token=58bc70c6-de74-45a5-b406-8f0c33e80073";
+          else if (aqi_pm25 <= 100)
+            sensor =
+              "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fyellow-point.png?alt=media&token=47609d47-ce10-455b-a2d1-5e4b46a1d0ba";
+          else if (aqi_pm25 <= 150)
+            sensor =
+              "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Forange-point.png?alt=media&token=446a1a4a-25a9-466c-bc0c-9ffec61b8083";
+          else
+            sensor =
+              "https://firebasestorage.googleapis.com/v0/b/safety-zone-c1ae5.appspot.com/o/images%2Fsensor%2Fred-point.png?alt=media&token=f8d62174-e75d-4974-ba6d-da3caf63db9d";
+          //set sensor on the map
+          let point = L.icon({
+            iconUrl: sensor, //icon url
+            iconSize: [12, 12], // size of the icon
+          });
+          //drop sensor on the map
+          let dustBoy = L.marker([lat, lon], { icon: point }).addTo(map);
+          //set popup
+          dustBoy.bindPopup(
+            "<b>DustBoy Sensor</b>" +
+              "<br><b>Name:</b> " +
+              name +
+              "<br><b>PM2.5:</b> " +
+              pm25 +
+              "<br><b>PM2.5 AQI:</b> " +
+              aqi_pm25
+          );
 
-        //set mouse hover action
-        dustBoy.on("mouseover", function (e) {
-          dustBoy.openPopup();
+          //set mouse hover action
+          dustBoy.on("mouseover", function (e) {
+            dustBoy.openPopup();
+          });
+          dustBoy.on("mouseout", function (e) {
+            dustBoy.closePopup();
+          });
         });
-        dustBoy.on("mouseout", function (e) {
-          dustBoy.closePopup();
-        });
-      });
+      }
     },
     school_mark(data, map, pin) {
       let lat;
@@ -99,7 +101,7 @@ export default {
             <b>${type}</b><br>
             <b>Name:</b> ${name}<br><br>
             <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
-                <button type='button' class='btn btn-success'>Navigatation</button>
+                <button type='button' class='btn btn-success'>Navigation</button>
             </a>
           `
         );
@@ -133,7 +135,7 @@ export default {
             <b>${type}</b><br>
             <b>Name:</b> ${name}<br><br>
             <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
-              <button type='button' class='btn btn-success'>Navigatation</button>
+              <button type='button' class='btn btn-success'>Navigation</button>
             </a>
           `
         );
@@ -167,7 +169,7 @@ export default {
             <b>${type}</b><br>
             <b>Name:</b> ${name}<br><br>
             <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
-              <button type='button' class='btn btn-success'>Navigatation</button>
+              <button type='button' class='btn btn-success'>Navigation</button>
             </a>
           `
         );
@@ -223,7 +225,7 @@ export default {
               <button type='button' class='btn btn-primary'>Info</button>
             </a>
             <a href='https://www.google.com/maps/dir/?api=1&origin=&destination=${lat},${lon}' >
-              <button type='button' class='btn btn-success'>Navigatation</button>
+              <button type='button' class='btn btn-success'>Navigation</button>
             </a>
           `
         );
@@ -239,7 +241,7 @@ export default {
       return new Promise(async (resolve, reject) => {
         var result = {
           location: [],
-          zoom: 5
+          zoom: 5,
         };
         try {
           if (navigator.geolocation) {
@@ -252,7 +254,7 @@ export default {
                 resolve(result);
               },
               async function () {
-                alert("Website cannot indicate your loaction")
+                alert("Website cannot indicate your loaction");
                 await result.location.push(13.7244416);
                 await result.location.push(100.3529157);
 
@@ -260,7 +262,9 @@ export default {
               }
             );
           } else {
-            alert("Geolocation is not supported by this browser \n Website cannot indicate your loaction");
+            alert(
+              "Geolocation is not supported by this browser \n Website cannot indicate your loaction"
+            );
             result.location.push(12.9036402);
             result.location.push(92.4362261);
 
@@ -348,7 +352,7 @@ export default {
             );
           });
       })
-      .then(()=>{
+      .then(() => {
         this.data_loading = false;
       })
       .catch((err) => {

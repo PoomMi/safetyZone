@@ -57,17 +57,20 @@ export default {
   modules: [
     ['bootstrap-vue/nuxt', { icons: true }], // Doc: https://bootstrap-vue.js.org
     ['cookie-universal-nuxt'], //cookie 
-    ['@nuxtjs/firebase', //firebase service
+    ['@nuxtjs/firebase',
       {
         config: {
           apiKey: "AIzaSyD9b-CAfy2cfYlFs1Pvzm4vS5U7leRHRKs",
           authDomain: "safety-zone-c1ae5.firebaseapp.com",
           databaseURL: "https://safety-zone-c1ae5.firebaseio.com",
-          storageBucket: "safety-zone-c1ae5.appspot.com"
+          projectId: "safety-zone-c1ae5",
+          storageBucket: "safety-zone-c1ae5.appspot.com",
+          messagingSenderId: "809799248278",
+          appId: "1:809799248278:web:7311a5af3bd73690edd5b7",
+          measurementId: "G-G27CMZLVH0"
         },
         services: {
           auth: true,
-          storage: true,
           realtimeDb: true
         }
       }
@@ -78,5 +81,8 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+  },
+  env: {
+    baseUrl: process.env.BASE_URL
   }
 }

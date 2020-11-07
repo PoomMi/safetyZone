@@ -12,8 +12,8 @@
 
       <div class="content" v-if="!data_loading">
         <b-row class="mt-2 ml-1">
-          <b-col cols="4" class="sf-title">ID</b-col>
-          <b-col class="sf-title">Name</b-col>
+          <b-col cols="2" class="sf-title">ID</b-col>
+          <b-col class="sf-title ml-5">Name</b-col>
         </b-row>
         <div v-for="(item, key) in data" :key="(item, key)">
           <b-row class="mt-1">
@@ -25,12 +25,12 @@
                 :title="item.name"
               >
                 <b-row>
-                  <b-col cols="5" class="ml-1">{{ item.sf_id }}</b-col>
-                  <b-col class="">{{ item.name }}</b-col>
+                  <b-col cols="3" class="ml-1">{{ item.sf_id }}</b-col>
+                  <b-col cols="7">{{ item.name }}</b-col>
                 </b-row>
               </nuxt-link>
             </b-col>
-            <b-col cols="2">
+            <b-col cols="2" class="btn">
               <button
                 type="button"
                 class="btn btn-danger btn-remove"
@@ -69,7 +69,8 @@ export default {
     if (this.$cookies.get("uid") == null) {
       alert("Invalid access!, try to login.");
       window.location = "/";
-    } else {
+    } 
+    else {
       this.load = true;
     }
 
@@ -93,7 +94,7 @@ export default {
               resolve(res.val());
             });
         } catch (err) {
-          reject(new Error(err));
+          reject(new Error("err"));
         }
       });
     },
@@ -108,8 +109,8 @@ export default {
             for (let index in res.val()) {
               if (res.val()[index] != null) this.data.push(res.val()[index]);
             }
-          }else{
-            alert("data is empty")
+          } else {
+            alert("data is empty");
           }
         })
         .then(() => {
@@ -201,11 +202,32 @@ export default {
           console.error(err);
         });
     },
+
+    sf_rating(sf_id) {
+      window.location = `/safety-zone-admin/rating/${sf_id}`;
+    },
+
+    async isAdmin() {
+      let admin = false;
+      await this.$fireDb
+        .ref(`admin/${this.$cookies.get("uid")}`)
+        .once("value")
+        .then((res) => {
+          if (res.val() != null) {
+            admin = true;
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      return admin;
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .card-body {
   max-height: 60vh;
   height: 60vh;
